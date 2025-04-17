@@ -3,7 +3,7 @@ import DisplayPlaces from "../lib/DisplayPlaces.tsx";
 import RenderUI from "../lib/RenderUI.tsx";
 import { useRef, useState } from "react";
 import RenderMap from "../lib/RenderMap.tsx";
-import FetchAndProcessData from "../lib/FetchAndProcessData";
+import FetchAndProcessData from "../lib/FetchAndProcessPlaces.tsx";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 
 function App() {

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { defineCustomElements } from "@esri/calcite-components/loader";
+import { handlePlaceChange } from "./RenderUIUtils";
 
 interface UIProps {
   mapRef?: any;
@@ -17,7 +18,7 @@ function RenderUI({ mapRef, viewRef, layerRef }: UIProps) {
   const [position, setPosition] = useState({ x: 15, y: 200 });
   const seen = new Set();
 
-  const handleDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleDragStart = (e: any) => {
     const startX = e.clientX;
     const startY = e.clientY;
 
@@ -39,32 +40,9 @@ function RenderUI({ mapRef, viewRef, layerRef }: UIProps) {
     document.addEventListener("mouseup", handleMouseUp);
   };
 
-  function handleTownChange(event: any) {
-    const selectedCity = event.target.value;
-    if (!selectedCity || !coastalPlacesLayer) return;
-
-    // Find the matching city graphic
-    const cityGraphic = coastalPlacesLayer.graphics.items.find(
-      (graphic: any) => graphic.attributes.CDTFA_CITY === selectedCity
-    );
-
-    if (cityGraphic && viewRef?.current) {
-      viewRef.current.goTo(
-        {
-          target: cityGraphic.geometry,
-          zoom: 12,
-        },
-        {
-          duration: 1000,
-          easing: "ease-in-out",
-        }
-      );
-    }
-  }
-
   return (
     <div
-      className="town-selector"
+      className="place-selector"
       ref={divRef}
       onMouseDown={handleDragStart}
       style={{ left: position.x, top: position.y }}
@@ -74,7 +52,9 @@ function RenderUI({ mapRef, viewRef, layerRef }: UIProps) {
       </calcite-label>
       <calcite-select
         id="townSelect"
-        oncalciteSelectChange={(e) => handleTownChange(e)}
+        oncalciteSelectChange={(e) =>
+          handlePlaceChange(e, coastalPlacesLayer, viewRef)
+        }
         label=""
       >
         <calcite-option value="" disabled selected>
